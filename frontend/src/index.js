@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   BrowserRouter as Router,
@@ -6,48 +6,96 @@ import {
   Route,
   Navigate,
   useLocation,
+  useNavigate,
 } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
-
+ 
+const getToken = () => localStorage.getItem('token');
+ 
+const PrivateRoute = ({ children }) => {
+  const token = getToken();
+  const location = useLocation();
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  return children;
+};
+ 
 const Home = () => (
   <h1>Hexlet Chat</h1>
 );
+ 
+const Login = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+ 
+  useEffect(() => {
+    if (getToken()) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
 
-const Login = () => (
-  <div style={{ maxWidth: 400, margin: '30px auto', padding: 20, border: '1px solid #eee', borderRadius: 8 }}>
-    <h2>Вход</h2>
-    <Formik
-      initialValues={{ username: '', password: '' }}
-      onSubmit={() => {}}
-    >
-      {() => (
-        <Form>
-          <div style={{ marginBottom: 15 }}>
-            <label htmlFor="username">Имя пользователя</label>
-            <Field
-              id="username"
-              name="username"
-              placeholder="Введите имя"
-              style={{ width: '100%', padding: 8, marginTop: 5 }}
-            />
-          </div>
-          <div style={{ marginBottom: 15 }}>
-            <label htmlFor="password">Пароль</label>
-            <Field
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Введите пароль"
-              style={{ width: '100%', padding: 8, marginTop: 5 }}
-            />
-          </div>
-          <button type="submit" style={{ padding: '8px 20px' }}>Войти</button>
-        </Form>
-      )}
-    </Formik>
-  </div>
-);
-
+  return (
+    <div style={{ maxWidth: 400, margin: '30px auto', padding: 20, border: '1px solid #eee', borderRadius: 8 }}>
+      <h2>Вход</h2>
+      <Formik
+        initialValues={{ username: '', password: '' }}
+        onSubmit={async (values, { setSubmitting }) => {
+          setError(null);
+          try {
+            const response = await fetch('/api/v1/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(values),
+            });
+            if (!response.ok) {
+              throw new Error('Неверные имя пользователя или пароль');
+            }
+            const data = await response.json();
+            localStorage.setItem('token', data.token);
+            navigate('/', { replace: true });
+          } catch (e) {
+            setError(e.message);
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <div style={{ marginBottom: 15 }}>
+              <label htmlFor="username">Имя пользователя</label>
+              <Field
+                id="username"
+                name="username"
+                placeholder="Введите имя"
+                style={{ width: '100%', padding: 8, marginTop: 5 }}
+              />
+            </div>
+            <div style={{ marginBottom: 15 }}>
+              <label htmlFor="password">Пароль</label>
+              <Field
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Введите пароль"
+                style={{ width: '100%', padding: 8, marginTop: 5 }}
+              />
+            </div>
+            {error && (
+              <div style={{ color: 'red', marginBottom: 15 }}>
+                {error}
+              </div>
+            )}
+            <button type="submit" style={{ padding: '8px 20px' }} disabled={isSubmitting}>
+              {isSubmitting ? 'Входим...' : 'Войти'}
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
 const NotFound = () => {
   const location = useLocation();
   return (
@@ -62,7 +110,14 @@ const NotFound = () => {
 const App = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        }
+      />
       <Route path="/login" element={<Login />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
