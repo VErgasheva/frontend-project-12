@@ -9,9 +9,12 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
- 
+import { Provider } from 'react-redux';
+import store from './store';
+import Chat from './components/Chat';
+
 const getToken = () => localStorage.getItem('token');
- 
+
 const PrivateRoute = ({ children }) => {
   const token = getToken();
   const location = useLocation();
@@ -20,15 +23,15 @@ const PrivateRoute = ({ children }) => {
   }
   return children;
 };
- 
+
 const Home = () => (
-  <h1>Hexlet Chat</h1>
+  <Chat />
 );
- 
+
 const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
- 
+
   useEffect(() => {
     if (getToken()) {
       navigate('/', { replace: true });
@@ -108,20 +111,22 @@ const NotFound = () => {
 };
 
 const App = () => (
-  <Router>
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        }
-      />
-      <Route path="/login" element={<Login />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </Router>
+  <Provider store={store}>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  </Provider>
 );
 
 const container = document.getElementById('root');
