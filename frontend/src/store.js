@@ -36,6 +36,9 @@ const chatSlice = createSlice({
     setCurrentChannel: (state, action) => {
       state.currentChannelId = action.payload;
     },
+    addMessage: (state, action) => {
+      state.messages.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -47,7 +50,9 @@ const chatSlice = createSlice({
         state.loading = false;
         state.channels = action.payload.channels;
         state.messages = action.payload.messages;
-        state.currentChannelId = action.payload.currentChannelId;
+        state.currentChannelId = action.payload.currentChannelId
+          ?? (action.payload.channels.find(ch => ch.name === 'general' || ch.name === 'General')?.id
+          ?? (action.payload.channels[0]?.id || null));
       })
       .addCase(fetchChatData.rejected, (state, action) => {
         state.loading = false;
@@ -56,7 +61,7 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setCurrentChannel } = chatSlice.actions;
+export const { setCurrentChannel, addMessage } = chatSlice.actions;
 
 const store = configureStore({
   reducer: {

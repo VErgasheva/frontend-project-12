@@ -99,6 +99,7 @@ const Login = () => {
     </div>
   );
 };
+
 const NotFound = () => {
   const location = useLocation();
   return (
