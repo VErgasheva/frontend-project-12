@@ -16,14 +16,16 @@ function copyRedirects() {
   };
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react(), copyRedirects()],
   server: {
-    proxy: {
-      '/api': 'http://localhost:5001',
-    },
+    proxy: mode === 'development'
+      ? {
+          '/api': 'http://localhost:5001',
+        }
+      : undefined,
   },
   build: {
     outDir: 'dist',
   },
-});
+}));

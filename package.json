@@ -2,11 +2,11 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "build": "cd frontend && npm install && npm run build",
-    "start": "npx serve -s ./frontend/dist"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,8 @@
     "formik": "^2.4.6",
     "react-router-dom": "^6.30.1",
     "socket.io-client": "^4.8.1",
-    "serve": "^14.2.0"
+    "serve": "^14.2.0",
+    "serve-static": "^1.15.0",
+    "finalhandler": "^1.2.0"
   }
 }
