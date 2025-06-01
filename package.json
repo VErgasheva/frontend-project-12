@@ -12,12 +12,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hexlet/chat-server": "^2.0.4",
+    "@fastify/jwt": "^9.1.0",
+    "@fastify/static": "^8.2.0",
+    "@hexlet/chat-server": "^1.1.6",
+    "finalhandler": "^1.2.0",
     "formik": "^2.4.6",
+    "glob": "^11.0.2",
     "react-router-dom": "^6.30.1",
-    "socket.io-client": "^4.8.1",
     "serve": "^14.2.0",
     "serve-static": "^1.15.0",
-    "finalhandler": "^1.2.0"
+    "socket.io-client": "^4.8.1"
   }
 }
