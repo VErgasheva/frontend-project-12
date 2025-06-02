@@ -4,4 +4,4 @@ build:
  cd frontend && npm install && npm run build
 
 start:
- npx serve -s ./frontend/dist
+ node server.js
