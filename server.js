@@ -1,10 +1,7 @@
-import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
-
-const require = createRequire(import.meta.url);
-const chatServer = require('@hexlet/chat-server');
+import chatServer from '@hexlet/chat-server';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
