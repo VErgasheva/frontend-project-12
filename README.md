@@ -2,7 +2,7 @@
 [![Actions Status](https://github.com/VErgasheva/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/VErgasheva/frontend-project-12/actions)
 
 Приложение задеплоено на Render:  
-https://frontend-project-12-lh1u.onrender.com
+https://frontend-project-0012.onrender.com/
 
 Установка и запуск
 
