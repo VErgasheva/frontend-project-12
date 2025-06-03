@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
 import fs from 'fs';
 
 function copyRedirects() {
@@ -8,8 +8,12 @@ function copyRedirects() {
     name: 'copy-redirects',
     closeBundle() {
       const src = resolve(__dirname, 'public/_redirects');
-      const dest = resolve(__dirname, 'dist/_redirects');
+      const destDir = resolve(__dirname, 'dist');
+      const dest = resolve(destDir, '_redirects');
       if (fs.existsSync(src)) {
+        if (!fs.existsSync(destDir)) {
+          fs.mkdirSync(destDir, { recursive: true });
+        }
         fs.copyFileSync(src, dest);
       }
     },
