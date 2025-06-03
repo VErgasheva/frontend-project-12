@@ -5,8 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
-    "start": "node server.js"
+    "build": "npm run build --prefix frontend",
+    "start": "start-server -s ./frontend/dist",
+    "postinstall": "cd frontend && npm ci"
   },
   "keywords": [],
   "author": "",
