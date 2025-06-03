@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchChatData, setCurrentChannel, addMessage, addChannel, removeChannel, renameChannel } from '../store';
 import { io } from 'socket.io-client';
-import { AddChannelModal, RenameChannelModal, RemoveChannelModal } from './ChannelModals';
+import { AddChannelModal, RenameChannelModal, RemoveChannelModal } from './ChannelModals.jsx';
 
 const MessageForm = ({ currentChannelId }) => {
   const [text, setText] = React.useState('');
