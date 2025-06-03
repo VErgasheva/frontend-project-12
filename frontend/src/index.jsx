@@ -13,7 +13,7 @@ import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 import { Provider } from 'react-redux';
 import store from './store';
-import Chat from './components/Chat';
+import Chat from './components/Chat.jsx';
 
 const getToken = () => localStorage.getItem('token');
 
