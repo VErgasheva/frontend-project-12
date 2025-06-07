@@ -1,35 +1,23 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { resolve, dirname } from 'path';
-import fs from 'fs';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-function copyRedirects() {
-  return {
-    name: 'copy-redirects',
-    closeBundle() {
-      const src = resolve(__dirname, 'public/_redirects');
-      const destDir = resolve(__dirname, 'dist');
-      const dest = resolve(destDir, '_redirects');
-      if (fs.existsSync(src)) {
-        if (!fs.existsSync(destDir)) {
-          fs.mkdirSync(destDir, { recursive: true });
-        }
-        fs.copyFileSync(src, dest);
-      }
-    },
-  };
-}
-
-export default defineConfig(({ mode }) => ({
-  plugins: [react(), copyRedirects()],
+export default defineConfig({
+  plugins: [react()],
   server: {
-    proxy: mode === 'development'
-      ? {
-          '/api': 'http://localhost:5001',
-        }
-      : undefined,
+    port: 5002,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5001',
+      },
+      '/socket.io': {
+        target: 'ws://localhost:5001',
+        ws: true,
+        rewriteWsOrigin: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',
+    sourcemap: true,
   },
-}));
+})

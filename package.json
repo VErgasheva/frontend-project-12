@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "build": "npm run build --prefix frontend",
@@ -10,6 +10,8 @@
     "postinstall": "cd frontend && npm ci"
   },
   "keywords": [],
+  "i18next": "^25.1.2",
+  "react-i18next": "^15.5.1",
   "author": "",
   "license": "ISC",
   "dependencies": {
