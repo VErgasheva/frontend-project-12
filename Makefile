@@ -25,4 +25,4 @@ compile:
 	npm run compile
 
 start:
-    npm start
+	npm start
