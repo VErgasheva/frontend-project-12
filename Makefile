@@ -23,3 +23,6 @@ dev:
 compile:
 	rm -rf client/dist
 	npm run compile
+
+start:
+    npm start
