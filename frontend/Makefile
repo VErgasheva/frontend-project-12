@@ -1,12 +1,12 @@
 install:
- npm ci
+	npm ci
 
 start:
- npm start
+	npm start
 
 build:
- npm build
+	npm build
 
 lint:
- npx eslint --ext js,jsx --no-eslintrc --config .eslintrc.yml
+	npx eslint --ext js,jsx --no-eslintrc --config .eslintrc.yml
 	
