@@ -1,28 +1,25 @@
 setup:
-	npm ci
-	make compile
+ npm ci
+ make compile
 
 lint-ui:
-	make -C client lint
+ make -C frontend lint
 
 run-ui:
-	make -C client serve
+ make -C frontend start
 
-run-api:
-	npx start-server -s ./client/dist
+run-server:
+ npx start-server -s ./frontend/dist
 
-deploy-heroku:
-	git push heroku main
-
-serve:
-	make run-api
-
-dev:
-	make run-api & make run-ui
-
-compile:
-	rm -rf client/dist
-	npm run compile
+deploy:
+ git push heroku main
 
 start:
-	npm start
+ make run-server
+
+dev:
+ make run-server & make run-ui
+
+compile:
+ rm -rf frontend/dist
+ npm run build

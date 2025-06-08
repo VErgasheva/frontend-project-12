@@ -1,31 +1,25 @@
 {
-  "name": "@hexlet/code",
+  "name": "hexlet-clone",
   "version": "1.0.0",
-  "description": "",
+  "description": "Чат приложение, рерайт чужого проекта.",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "npm run build --prefix frontend",
     "start": "start-server -s ./frontend/dist",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "cd frontend && npm ci"
   },
-  "keywords": [],
-  "i18next": "^25.1.2",
-  "react-i18next": "^15.5.1",
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/yourname/hexlet-clone.git"
+  },
+  "author": "yourname",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yourname/hexlet-clone/issues"
+  },
+  "homepage": "https://github.com/yourname/hexlet-clone#readme",
   "dependencies": {
-    "@fastify/jwt": "^9.1.0",
-    "@fastify/static": "^8.2.0",
-    "@hexlet/chat-server": "^1.1.9",
-    "express": "^4.18.2",
-    "finalhandler": "^1.2.0",
-    "formik": "^2.4.6",
-    "glob": "^11.0.2",
-    "http-proxy-middleware": "^3.0.5",
-    "react-router-dom": "^6.30.1",
-    "serve": "^14.2.0",
-    "serve-static": "^1.15.0",
-    "socket.io-client": "^4.8.1"
+    "@hexlet/chat-server": "^2.0.4"
   }
 }
