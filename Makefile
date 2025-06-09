@@ -8,7 +8,7 @@ lint-ui:
 run-ui:
 	make -C frontend start
 
-run-server:
+run-server: compile
 	npx start-server -s ./frontend/dist
 
 deploy:
@@ -22,4 +22,4 @@ dev:
 
 compile:
 	rm -rf frontend/dist
-	npm run build
+	cd frontend && npm run build

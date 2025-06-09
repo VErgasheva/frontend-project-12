@@ -4,8 +4,8 @@
   "description": "Чат приложение, рерайт чужого проекта.",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build --prefix frontend",
-    "start": "start-server -s ./frontend/dist",
+    "build": "cd frontend && npm run build",
+    "start": "npm run build && start-server -s ./frontend/dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "cd frontend && npm ci"
   },
