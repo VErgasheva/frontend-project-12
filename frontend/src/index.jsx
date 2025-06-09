@@ -11,6 +11,9 @@ import { messagesApi } from './slices/messagesSlice.js'
 import { channelsApi, actions as channelsActions } from './slices/channelsSlice.js'
 import log from './logger.js'
 
+// Подключение react-toastify стилей
+import 'react-toastify/dist/ReactToastify.css'
+
 const container = document.getElementById('chat')
 
 const renderApp = async () => {
@@ -40,7 +43,7 @@ const renderApp = async () => {
   root.render(
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
-        <App />
+<App />
       </Provider>
     </I18nextProvider>
   )
