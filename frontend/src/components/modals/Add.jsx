@@ -3,7 +3,7 @@ import { Button, Form, Modal, Stack } from 'react-bootstrap'
 import * as Yup from 'yup'
 import { useAddChannelMutation } from '../../slices/channelsSlice.js'
 import { useTranslation } from 'react-i18next'
-import profanityFilter from 'leo-profanity'
+import * as profanityFilter from 'leo-profanity'
 import { toast } from 'react-toastify'
 
 const getValidationSchema = channelNames => Yup.object().shape({

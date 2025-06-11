@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/yourname/hexlet-clone#readme",
   "dependencies": {
-    "@hexlet/chat-server": "^2.0.4"
+    "@hexlet/chat-server": "^2.0.4",
+    "leo-profanity": "^1.7.0"
   },
   "devDependencies": {
     "vite": "^6.3.5"
