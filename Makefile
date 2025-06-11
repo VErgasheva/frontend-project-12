@@ -8,8 +8,8 @@ lint-ui:
 run-ui:
 	make -C frontend start
 
-run-server: compile
-	npx start-server -s ./frontend/dist
+run-server:
+	npx serve -s frontend/dist
 
 deploy:
 	git push heroku main

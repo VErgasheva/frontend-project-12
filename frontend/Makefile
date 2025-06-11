@@ -2,7 +2,7 @@ install:
 	npm ci
 
 start:
-	npm start
+	npx serve -s dist
 
 build:
 	npm run build
