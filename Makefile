@@ -9,7 +9,7 @@ run-ui:
 	make -C frontend start
 
 run-server:
-	npx serve -s frontend/dist
+	npx serve -s frontend/dist -l 10000
 
 deploy:
 	git push heroku main
@@ -22,4 +22,4 @@ dev:
 
 compile:
 	rm -rf frontend/dist
-	cd frontend && npm run build
+	npm run build
