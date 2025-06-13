@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5002,
-    proxy: process.env.NODE_ENV === 'production' ? undefined : {
+    proxy: {
       '/api': {
         target: 'http://localhost:5001',
       },
@@ -15,9 +15,5 @@ export default defineConfig({
         rewriteWsOrigin: true,
       },
     },
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
   },
 })

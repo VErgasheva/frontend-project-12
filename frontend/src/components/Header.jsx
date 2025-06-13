@@ -20,7 +20,7 @@ function Header() {
   return (
     <Navbar className="shadow-sm navbar-expand-lg navbar-light bg-white">
       <Container>
-        <Navbar.Brand href="/">ChatApp</Navbar.Brand>
+        <Navbar.Brand href="/">Hexlet Chat</Navbar.Brand>
         <LogoutButton />
       </Container>
     </Navbar>
