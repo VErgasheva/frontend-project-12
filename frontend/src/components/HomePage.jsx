@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useGetChannelsQuery } from '../slices/channelsSlice.jsx'
+import { useGetChannelsQuery } from '../slices/ChannelsSlice.jsx'
 import ChannelsList from './ChannelsList.jsx'
 import Chat from './Chat.jsx'
 import Container from 'react-bootstrap/esm/Container.js'
