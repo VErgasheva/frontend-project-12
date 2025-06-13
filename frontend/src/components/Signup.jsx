@@ -1,8 +1,9 @@
+import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import { Button, FloatingLabel, Form, Stack } from 'react-bootstrap'
 import FormContainer from './FormContainer'
 import * as Yup from 'yup'
-import { createAuthUser } from '../slices/authUserSlice'
+import { registerUser } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -24,16 +25,17 @@ const SignupPage = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const authError = useSelector(state => state.authUser.error)
-  const redirectToHomePage = useSelector(state => state.authUser.isUserAuth)
-  if (redirectToHomePage) {
-    navigate('/')
-  }
+  const error = useSelector(state => state.user.error)
+  const isLoggedIn = useSelector(state => state.user.isAuthenticated)
 
-  const useSubmit = () => {
-    return ({ username, password }) => {
-      dispatch(createAuthUser({ username, password }))
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/')
     }
+  }, [isLoggedIn, navigate])
+
+  const handleSubmit = ({ username, password }) => {
+    dispatch(registerUser({ username, password }))
   }
 
   const formik = useFormik({
@@ -43,74 +45,77 @@ const SignupPage = () => {
       passwordConfirmation: '',
     },
     validationSchema,
-    onSubmit: useSubmit(),
+    onSubmit: handleSubmit,
   })
 
   return (
-    <FormContainer image="imagereg.png" imageAlt="Регистрация" regfooter={false}>
+    <FormContainer image="imagereg.png" imageAlt={t('Registration')} regfooter={false}>
       <Form className="w-100 mx-auto" onSubmit={formik.handleSubmit}>
-        <h1 className="text-center mb-4">Регистрация</h1>
-        <fieldset disabled={formik.handleSubmit}>
+        <h1 className="text-center mb-4">{t('Registration')}</h1>
+        <fieldset disabled={formik.isSubmitting}>
           <Stack gap={3}>
-            <FloatingLabel controlId="floatingUsername" label="Имя пользователя" className="position-relative">
+            <FloatingLabel controlId="floatingUsername" label={t('Username')} className="position-relative">
               <Form.Control
                 autoFocus
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.username}
-                placeholder="Имя пользователя"
+                placeholder={t('Username')}
                 name="username"
                 autoComplete="username"
-                isInvalid={!!(authError) || (formik.touched.username && formik.errors.username)}
+                isInvalid={!!(error) || (formik.touched.username && formik.errors.username)}
               />
-              {authError && (
-                <Form.Control.Feedback type="invalid" tooltip></Form.Control.Feedback>
+              {error && (
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {t(error)}
+                </Form.Control.Feedback>
               )}
               {formik.errors.username && (
                 <Form.Control.Feedback type="invalid" tooltip>
-                  {formik.errors.username}
+                  {t(formik.errors.username)}
                 </Form.Control.Feedback>
               )}
             </FloatingLabel>
-            <FloatingLabel controlId="floatingPassword" label="Пароль">
+            <FloatingLabel controlId="floatingPassword" label={t('Password')}>
               <Form.Control
                 type="password"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                placeholder="Пароль"
+                placeholder={t('Password')}
                 name="password"
-                autoComplete="current-password"
-                isInvalid={!!(authError) || (formik.touched.password && formik.errors.password)}
+                autoComplete="new-password"
+                isInvalid={!!(error) || (formik.touched.password && formik.errors.password)}
               />
-              <Form.Control.Feedback type="invalid" tooltip>
-                {t(authError)}
-              </Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid" tooltip>
-                {formik.errors.password}
-              </Form.Control.Feedback>
+              {formik.errors.password && (
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {t(formik.errors.password)}
+                </Form.Control.Feedback>
+              )}
             </FloatingLabel>
-            <FloatingLabel controlId="floatingPasswordConfirmation" label="Подтвердите пароль">
+            <FloatingLabel controlId="floatingPasswordConfirmation" label={t('Confirm the password')}>
               <Form.Control
                 type="password"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.passwordConfirmation}
-                placeholder="Подтвердите пароль"
+                placeholder={t('Confirm the password')}
                 name="passwordConfirmation"
-                autoComplete="current-passwordConfirmation"
-                isInvalid={formik.touched.passwordConfirmation
-                  && formik.errors.passwordConfirmation}
+                autoComplete="new-password"
+                isInvalid={formik.touched.passwordConfirmation && formik.errors.passwordConfirmation}
               />
-              <Form.Control.Feedback type="invalid" tooltip>
-                {formik.errors.passwordConfirmation}
-              </Form.Control.Feedback>
+              {formik.errors.passwordConfirmation && (
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {t(formik.errors.passwordConfirmation)}
+                </Form.Control.Feedback>
+              )}
             </FloatingLabel>
-            <Button type="submit" variant="outline-primary">Зарегистрироваться</Button>
+            <Button type="submit" variant="outline-primary">{t('Register')}</Button>
           </Stack>
         </fieldset>
       </Form>
     </FormContainer>
   )
 }
+
 export default SignupPage
