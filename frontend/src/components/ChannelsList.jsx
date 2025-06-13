@@ -4,7 +4,7 @@ import { actions as channelActions } from '../slices/channelsSlice.js'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
-function ChannelList({ currentChannel, channels, showModal }) {
+function ChannelsList({ currentChannel, channels, showModal }) {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const currentChannelId = currentChannel ? currentChannel.id : '1'
@@ -12,7 +12,7 @@ function ChannelList({ currentChannel, channels, showModal }) {
   return (
     <Col md={2} className="col-4 border-end px-0 bg-light flex-column h-100 d-flex">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-        <b>Каналы</b>
+        <b>{t('Channels')}</b>
         <button onClick={() => { showModal('newChannel') }} type="button" className="p-0 text-primary btn btn-group-vertical">
           <PlusSquareFill size={20} />
           <span className="visually-hidden">+</span>
@@ -24,24 +24,26 @@ function ChannelList({ currentChannel, channels, showModal }) {
             <Dropdown as={ButtonGroup} className="d-flex">
               <Button
                 className="w-100 rounded-0 text-start btn"
-                variant={(channel.id === currentChannelId) && 'secondary'}
-                onClick={() => { dispatch(channelActions.setCurrentChannelId(channel.id)) }}
+                variant={channel.id === currentChannelId ? 'secondary' : undefined}
+                onClick={() => { dispatch(channelActions.selectChannel(channel.id)) }}
               >
                 <span className="me-1">#</span>
                 {channel.name}
               </Button>
               {channel.removable && (
-                <Dropdown.Toggle
-                  split
-                  variant={channel.id === currentChannel.id && 'secondary'}
-                >
-                  <span className="visually-hidden">{t('Channel management')}</span>
-                </Dropdown.Toggle>
+                <>
+                  <Dropdown.Toggle
+                    split
+                    variant={channel.id === currentChannelId ? 'secondary' : undefined}
+                  >
+                    <span className="visually-hidden">{t('Channel management')}</span>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => showModal('removeChannel', channel)}>{t('Delete')}</Dropdown.Item>
+                    <Dropdown.Item onClick={() => showModal('renameChannel', channel)}>{t('Rename')}</Dropdown.Item>
+                  </Dropdown.Menu>
+                </>
               )}
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => showModal('removeChannel', channel)}>{t('Delete')}</Dropdown.Item>
-                <Dropdown.Item onClick={() => showModal('renameChannel', channel)}>{t('Rename')}</Dropdown.Item>
-              </Dropdown.Menu>
             </Dropdown>
           </li>
         ))}
@@ -49,5 +51,4 @@ function ChannelList({ currentChannel, channels, showModal }) {
     </Col>
   )
 }
-
-export default ChannelList
+export default ChannelsList

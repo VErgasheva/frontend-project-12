@@ -32,7 +32,7 @@ export const channelsApi = createApi({
     }),
     renameChannel: builder.mutation({
       query: ({ id, name }) => ({
-        url: `/api/resource/${id}`,
+        url: `/${id}`,
         method: 'PATCH',
         body: { name },
       }),
