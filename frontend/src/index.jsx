@@ -11,27 +11,14 @@ import { messagesApi } from './slices/messagesSlice.js'
 import { channelsApi, actions as channelsActions } from './slices/channelsSlice.js'
 import log from './logger.js'
 
-let socket = null
-
-const container = document.getElementById('chat')
+export const store = configureStore(rootReducer)
 
 const setupSocket = (store) => {
   const token = localStorage.getItem('token')
   if (!token) {
-    if (socket) {
-      socket.disconnect()
-      socket = null
-    }
-    return
+    return null
   }
-  if (socket && socket.auth && socket.auth.token === `Bearer ${token}` && socket.connected) {
-    return
-  }
-  if (socket) {
-    socket.disconnect()
-    socket = null
-  }
-  socket = io({
+  const socket = io({
     auth: { token: `Bearer ${token}` },
   })
 
@@ -59,34 +46,35 @@ const setupSocket = (store) => {
       log('Channel renamed', payload)
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
     })
+  return socket
 }
-const renderApp = async () => {
-  const store = configureStore(rootReducer)
-  setupSocket(store)
 
-  let prevToken = localStorage.getItem('token')
+const renderApp = async () => {
+  let socket = null
+
+  let prevAuth = Boolean(localStorage.getItem('token'))
+  if (prevAuth) {
+    socket = setupSocket(store)
+  }
+
   store.subscribe(() => {
     const isAuthenticated = store.getState().user.isAuthenticated
     const token = localStorage.getItem('token')
     if (isAuthenticated && token) {
-      if (token !== prevToken) {
-        setupSocket(store)
-        prevToken = token
-      }
       if (!socket) {
-        setupSocket(store)
-        prevToken = token
+        socket = setupSocket(store)
       }
     } else {
       if (socket) {
         socket.disconnect()
         socket = null
-        prevToken = null
       }
     }
+    prevAuth = isAuthenticated
   })
 
   const i18n = await createI18n()
+  const container = document.getElementById('chat')
   const root = createRoot(container)
   root.render(
     <I18nextProvider i18n={i18n}>
