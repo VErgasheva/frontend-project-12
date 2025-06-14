@@ -1,5 +1,5 @@
 {
-  "name": "hexlet-clone",
+  "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "Чат приложение, рерайт чужого проекта.",
   "main": "index.js",
