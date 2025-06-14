@@ -1,7 +1,6 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "Чат приложение, рерайт чужого проекта.",
   "main": "index.js",
   "scripts": {
     "build": "cd frontend && npm ci && npm run build",
@@ -10,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/yourname/hexlet-clone.git"
+    "url": "git+ssh://git@github.com/VErgasheva/frontend-project-12.git"
   },
   "author": "yourname",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/yourname/hexlet-clone/issues"
+    "url": "https://github.com/VErgasheva/frontend-project-12/issues"
   },
-  "homepage": "https://github.com/yourname/hexlet-clone#readme",
+  "homepage": "https://github.com/VErgasheva/frontend-project-12#readme",
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4",
     "leo-profanity": "^1.7.0",
