@@ -11,12 +11,39 @@ import { messagesApi } from './slices/messagesSlice.js'
 import { channelsApi, actions as channelsActions } from './slices/channelsSlice.js'
 import log from './logger.js'
 
+let socket = null
+
 const container = document.getElementById('chat')
 
-const renderApp = async () => {
-  const store = configureStore(rootReducer)
-  const socket = io()
+const setupSocket = (store) => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    if (socket) {
+      socket.disconnect()
+      socket = null
+    }
+    return
+  }
+
+  if (socket && socket.auth && socket.auth.token === token && socket.connected) {
+    return
+  }
+  if (socket) {
+    socket.disconnect()
+    socket = null
+  }
+
+  socket = io({
+    auth: { token: `Bearer ${token}` },
+  })
+
   socket
+    .on('connect', () => {
+      log('Socket connected', { id: socket.id })
+    })
+    .on('disconnect', (reason) => {
+      log('Socket disconnected', reason)
+    })
     .on('newMessage', (payload) => {
       log('Message event', payload)
       store.dispatch(messagesApi.util.invalidateTags(['Messages']))
@@ -34,13 +61,32 @@ const renderApp = async () => {
       log('Channel renamed', payload)
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
     })
+}
+
+const renderApp = async () => {
+  const store = configureStore(rootReducer)
+  let prevAuth = Boolean(localStorage.getItem('token'))
+  setupSocket(store)
+  store.subscribe(() => {
+    const isAuthenticated = store.getState().user.isAuthenticated
+    const token = localStorage.getItem('token')
+    if (isAuthenticated && token) {
+      setupSocket(store)
+    } else {
+      if (socket) {
+        socket.disconnect()
+        socket = null
+      }
+    }
+    prevAuth = isAuthenticated
+  })
 
   const i18n = await createI18n()
   const root = createRoot(container)
   root.render(
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
-<App />
+        <App />
       </Provider>
     </I18nextProvider>
   )
