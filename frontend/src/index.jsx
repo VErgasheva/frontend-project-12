@@ -24,7 +24,7 @@ const setupSocket = (store) => {
     }
     return
   }
-  if (socket && socket.auth && socket.auth.token === token && socket.connected) {
+  if (socket && socket.auth && socket.auth.token === `Bearer ${token}` && socket.connected) {
     return
   }
   if (socket) {
@@ -60,23 +60,30 @@ const setupSocket = (store) => {
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
     })
 }
-
 const renderApp = async () => {
   const store = configureStore(rootReducer)
-  let prevAuth = Boolean(localStorage.getItem('token'))
   setupSocket(store)
+
+  let prevToken = localStorage.getItem('token')
   store.subscribe(() => {
     const isAuthenticated = store.getState().user.isAuthenticated
     const token = localStorage.getItem('token')
     if (isAuthenticated && token) {
-      setupSocket(store)
+      if (token !== prevToken) {
+        setupSocket(store)
+        prevToken = token
+      }
+      if (!socket) {
+        setupSocket(store)
+        prevToken = token
+      }
     } else {
       if (socket) {
         socket.disconnect()
         socket = null
+        prevToken = null
       }
     }
-    prevAuth = isAuthenticated
   })
 
   const i18n = await createI18n()
