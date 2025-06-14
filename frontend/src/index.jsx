@@ -24,7 +24,6 @@ const setupSocket = (store) => {
     }
     return
   }
-
   if (socket && socket.auth && socket.auth.token === token && socket.connected) {
     return
   }
@@ -32,7 +31,6 @@ const setupSocket = (store) => {
     socket.disconnect()
     socket = null
   }
-
   socket = io({
     auth: { token: `Bearer ${token}` },
   })
