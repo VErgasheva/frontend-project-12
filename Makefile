@@ -1,6 +1,7 @@
 setup:
 	npm ci
 	make build
+	make -C frontend install
 
 lint-ui:
 	make -C frontend lint
