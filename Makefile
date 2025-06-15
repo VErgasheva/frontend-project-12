@@ -29,3 +29,9 @@ build:
 
 setup: 
 	install build
+
+run-server:
+	npx serve -s frontend/dist -l 10000
+
+run-ui:
+	cd frontend && npm run dev
