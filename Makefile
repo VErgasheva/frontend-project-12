@@ -1,15 +1,14 @@
-setup:
+install:
 	npm ci
 	make build
-	make -C frontend install
 
-lint-ui:
+lint-frontend:
 	make -C frontend lint
 
-run-ui:
+start-frontend:
 	make -C frontend start
 
-run-server:
+start-backend:
 	npx serve -s frontend/dist -l 10000
 
 deploy:
