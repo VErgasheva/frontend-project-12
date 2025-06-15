@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "build": "cd frontend && npm ci && npm run build",
-    "start": "npx serve -s frontend/dist -l 10000",
-    "heroku-postbuild": "cd frontend && npm ci && npm run build"
+    "start": "npm run build && npx serve -s frontend/dist -l 10000",
+    "heroku-postbuild": "cd frontend && npmci && npm run build",
+    "test:e2e": "cd frontend && npm run test:e2e"
   },
   "repository": {
     "type": "git",

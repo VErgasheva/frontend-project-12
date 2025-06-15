@@ -35,3 +35,6 @@ run-server:
 
 run-ui:
 	cd frontend && npm run dev
+
+test:
+	npm run test:e2e
