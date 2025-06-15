@@ -2,7 +2,7 @@ import { useFormik } from 'formik'
 import { Button, FloatingLabel, Form, Stack } from 'react-bootstrap'
 import FormContainer from './FormContainer'
 import * as Yup from 'yup'
-import { createAuthUser } from '../slices/authUserSlice'
+import { registerUser } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -24,16 +24,15 @@ const SignupPage = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const authError = useSelector(state => state.authUser.error)
-  const redirectToHomePage = useSelector(state => state.authUser.isUserAuth)
-  if (redirectToHomePage) {
+  const authError = useSelector(state => state.user.error)
+  const isAuthenticated = useSelector(state => state.user.isAuthenticated)
+
+  if (isAuthenticated) {
     navigate('/')
   }
 
-  const useSubmit = () => {
-    return ({ username, password }) => {
-      dispatch(createAuthUser({ username, password }))
-    }
+  const handleSubmit = ({ username, password }) => {
+    dispatch(registerUser({ username, password }))
   }
 
   const formik = useFormik({
@@ -43,14 +42,14 @@ const SignupPage = () => {
       passwordConfirmation: '',
     },
     validationSchema,
-    onSubmit: useSubmit(),
+    onSubmit: handleSubmit,
   })
 
   return (
     <FormContainer image="imagereg.png" imageAlt="Регистрация" regfooter={false}>
       <Form className="w-100 mx-auto" onSubmit={formik.handleSubmit}>
         <h1 className="text-center mb-4">Регистрация</h1>
-        <fieldset disabled={formik.handleSubmit}>
+        <fieldset disabled={formik.isSubmitting}>
           <Stack gap={3}>
             <FloatingLabel controlId="floatingUsername" label="Имя пользователя" className="position-relative">
               <Form.Control
@@ -61,10 +60,12 @@ const SignupPage = () => {
                 placeholder="Имя пользователя"
                 name="username"
                 autoComplete="username"
-                isInvalid={!!(authError) || (formik.touched.username && formik.errors.username)}
+                isInvalid={!!authError || (formik.touched.username && formik.errors.username)}
               />
               {authError && (
-                <Form.Control.Feedback type="invalid" tooltip></Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {t(authError)}
+                </Form.Control.Feedback>
               )}
               {formik.errors.username && (
                 <Form.Control.Feedback type="invalid" tooltip>
@@ -81,11 +82,8 @@ const SignupPage = () => {
                 placeholder="Пароль"
                 name="password"
                 autoComplete="current-password"
-                isInvalid={!!(authError) || (formik.touched.password && formik.errors.password)}
+                isInvalid={!!authError || (formik.touched.password && formik.errors.password)}
               />
-              <Form.Control.Feedback type="invalid" tooltip>
-                {t(authError)}
-              </Form.Control.Feedback>
               <Form.Control.Feedback type="invalid" tooltip>
                 {formik.errors.password}
               </Form.Control.Feedback>
@@ -99,8 +97,7 @@ const SignupPage = () => {
                 placeholder="Подтвердите пароль"
                 name="passwordConfirmation"
                 autoComplete="current-passwordConfirmation"
-                isInvalid={formik.touched.passwordConfirmation
-                  && formik.errors.passwordConfirmation}
+                isInvalid={formik.touched.passwordConfirmation && formik.errors.passwordConfirmation}
               />
               <Form.Control.Feedback type="invalid" tooltip>
                 {formik.errors.passwordConfirmation}
