@@ -1,6 +1,6 @@
 install:
-	npm ci
-	make build
+	cd frontend && npm ci
+	make -C frontend build
 
 lint-frontend:
 	make -C frontend lint
@@ -23,3 +23,4 @@ dev:
 compile:
 	rm -rf frontend/dist
 	npm run build
+
