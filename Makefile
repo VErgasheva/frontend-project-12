@@ -15,7 +15,7 @@ deploy:
 	git push heroku main
 
 start:
-	make run-server
+	npx serve -s frontend/dist -l 10000
 
 dev:
 	make run-server & make run-ui

@@ -10,10 +10,10 @@ function MessageForm({ channelId, currentUsername }) {
 
   const formik = useFormik({
     initialValues: { message: '' },
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       const cleanMessage = profanityFilter.clean(values.message)
       sendMessage({ cleanMessage, channelId, currentUsername })
-      values.message = ''
+      resetForm()
     },
   })
 
@@ -34,7 +34,11 @@ function MessageForm({ channelId, currentUsername }) {
             onChange={formik.handleChange}
             value={formik.values.message}
           />
-          <button type="submit" disabled="" className="btn btn-group-vertical">
+          <button
+            type="submit"
+            disabled={isLoading || !formik.values.message.trim()}
+            className="btn btn-group-vertical"
+          >
             <ArrowRightSquare size={20} />
             <span className="visually-hidden">{t('Send')}</span>
           </button>
