@@ -24,3 +24,8 @@ compile:
 	rm -rf frontend/dist
 	npm run build
 
+build:
+	make -C frontend build
+
+setup: 
+	install build
