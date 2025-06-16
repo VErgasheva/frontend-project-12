@@ -1,12 +1,11 @@
 install:
 	cd frontend && npm ci
-	make -C frontend build
 
 lint-frontend:
-	make -C frontend lint
+	cd frontend && npm run lint
 
 start-frontend:
-	make -C frontend start
+	cd frontend && npm run start
 
 start-backend:
 	npx serve -s frontend/dist -l 10000
@@ -18,17 +17,18 @@ start:
 	npx serve -s frontend/dist -l 10000
 
 dev:
-	make run-server & make run-ui
+	cd frontend && npm run dev
 
 compile:
 	rm -rf frontend/dist
-	npm run build
+	cd frontend && npm run build
 
 build:
-	make -C frontend build
+	cd frontend && npm run build
 
-setup: 
-	install build
+setup:
+	make install
+	make build
 
 run-server:
 	npx serve -s frontend/dist -l 10000
@@ -37,4 +37,4 @@ run-ui:
 	cd frontend && npm run dev
 
 test:
-	npm run test:e2e
+	cd frontend && npm run test:e2e

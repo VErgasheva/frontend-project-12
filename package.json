@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "cd frontend && npm ci && npm run build",
-    "start": "npm run build && npx serve -s frontend/dist -l 10000",
+    "install": "cd frontend && npm ci",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm run start",
     "heroku-postbuild": "cd frontend && npm ci && npm run build",
     "test:e2e": "cd frontend && npm run test:e2e"
   },
@@ -17,13 +18,5 @@
   "bugs": {
     "url": "https://github.com/VErgasheva/frontend-project-12/issues"
   },
-  "homepage": "https://github.com/VErgasheva/frontend-project-12#readme",
-  "dependencies": {
-    "@hexlet/chat-server": "^2.0.4",
-    "leo-profanity": "^1.7.0",
-    "serve": "^14.2.0"
-  },
-  "devDependencies": {
-    "vite": "^6.3.5"
-  }
+  "homepage": "https://github.com/VErgasheva/frontend-project-12#readme"
 }
