@@ -101,7 +101,7 @@ const renderApp = async () => {
           </ErrorBoundary>
         </RollbarProvider>
       </I18nextProvider>
-    </StrictMode>
+    </StrictMode>,
   )
 }
 
