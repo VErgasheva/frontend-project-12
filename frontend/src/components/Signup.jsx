@@ -38,13 +38,6 @@ const SignupPage = () => {
     dispatch(registerUser({ username, password }))
   }
 
-  const handleFieldChange = (e) => {
-    if (authError) {
-      dispatch(userActions.clearError())
-    }
-    formik.handleChange(e)
-  }
-
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -54,6 +47,14 @@ const SignupPage = () => {
     validationSchema,
     onSubmit: handleSubmit,
   })
+
+  const handleFieldChange = (e) => {
+    if (authError) {
+      dispatch(userActions.clearError())
+    }
+    formik.handleChange(e)
+  }
+
   return (
     <FormContainer image="imagereg.png" imageAlt={t('Registration')} regfooter={false}>
       <Form className="w-100 mx-auto" onSubmit={formik.handleSubmit}>
