@@ -6,18 +6,19 @@ import { registerUser } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().trim()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .required('Обязательное поле'),
+    .min(3, 'From 3 to 20 characters')
+    .max(20, 'From 3 to 20 characters')
+    .required('Required field'),
   password: Yup.string().trim()
-    .min(6, 'Не менее 6 символов')
-    .required('Обязательное поле'),
+    .min(6, 'At least 6 characters')
+    .required('Required field'),
   passwordConfirmation: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
-    .required('Обязательное поле'),
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Required field'),
 })
 
 const SignupPage = () => {
@@ -27,11 +28,13 @@ const SignupPage = () => {
   const authError = useSelector(state => state.user.error)
   const isAuthenticated = useSelector(state => state.user.isAuthenticated)
 
-  if (isAuthenticated) {
-    navigate('/')
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated, navigate])
 
-  const handleSubmit = ({ username, password }) => {
+  const handleSubmit = ({ username, password}) => {
     dispatch(registerUser({ username, password }))
   }
 
@@ -46,18 +49,18 @@ const SignupPage = () => {
   })
 
   return (
-    <FormContainer image="imagereg.png" imageAlt="Регистрация" regfooter={false}>
+    <FormContainer image="imagereg.png" imageAlt={t('Registration')} regfooter={false}>
       <Form className="w-100 mx-auto" onSubmit={formik.handleSubmit}>
-        <h1 className="text-center mb-4">Регистрация</h1>
+        <h1 className="text-center mb-4">{t('Registration')}</h1>
         <fieldset disabled={formik.isSubmitting}>
           <Stack gap={3}>
-            <FloatingLabel controlId="floatingUsername" label="Имя пользователя" className="position-relative">
+            <FloatingLabel controlId="floatingUsername" label={t('Username')} className="position-relative">
               <Form.Control
                 autoFocus
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.username}
-                placeholder="Имя пользователя"
+                placeholder={t('Username')}
                 name="username"
                 autoComplete="username"
                 isInvalid={!!authError || (formik.touched.username && formik.errors.username)}
@@ -69,41 +72,41 @@ const SignupPage = () => {
               )}
               {formik.errors.username && (
                 <Form.Control.Feedback type="invalid" tooltip>
-                  {formik.errors.username}
+                  {t(formik.errors.username)}
                 </Form.Control.Feedback>
               )}
             </FloatingLabel>
-            <FloatingLabel controlId="floatingPassword" label="Пароль">
+            <FloatingLabel controlId="floatingPassword" label={t('Password')}>
               <Form.Control
                 type="password"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                placeholder="Пароль"
+                placeholder={t('Password')}
                 name="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 isInvalid={!!authError || (formik.touched.password && formik.errors.password)}
               />
               <Form.Control.Feedback type="invalid" tooltip>
-                {formik.errors.password}
+                {t(formik.errors.password)}
               </Form.Control.Feedback>
             </FloatingLabel>
-            <FloatingLabel controlId="floatingPasswordConfirmation" label="Подтвердите пароль">
+            <FloatingLabel controlId="floatingPasswordConfirmation" label={t('Confirm the password')}>
               <Form.Control
                 type="password"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.passwordConfirmation}
-                placeholder="Подтвердите пароль"
+                placeholder={t('Confirm the password')}
                 name="passwordConfirmation"
-                autoComplete="current-passwordConfirmation"
+                autoComplete="new-password"
                 isInvalid={formik.touched.passwordConfirmation && formik.errors.passwordConfirmation}
               />
               <Form.Control.Feedback type="invalid" tooltip>
-                {formik.errors.passwordConfirmation}
+                {t(formik.errors.passwordConfirmation)}
               </Form.Control.Feedback>
             </FloatingLabel>
-            <Button type="submit" variant="outline-primary">Зарегистрироваться</Button>
+            <Button type="submit" variant="outline-primary">{t('Register')}</Button>
           </Stack>
         </fieldset>
       </Form>

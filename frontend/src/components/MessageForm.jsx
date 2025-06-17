@@ -12,7 +12,7 @@ function MessageForm({ channelId, currentUsername }) {
     initialValues: { message: '' },
     onSubmit: (values, { resetForm }) => {
       const cleanMessage = profanityFilter.clean(values.message)
-      sendMessage({ cleanMessage, channelId, currentUsername })
+      sendMessage({ body: cleanMessage, channelId, currentUsername })
       resetForm()
     },
   })

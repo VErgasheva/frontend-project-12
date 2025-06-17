@@ -19,7 +19,7 @@ function Login() {
     if (isLoggedIn) {
       navigate('/')
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, navigate])
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -59,12 +59,14 @@ function Login() {
               autoComplete="username"
               isInvalid={!!(error) || (formik.touched.username && formik.errors.username)}
             />
-            {!!(error) && (
-              <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
-            )}
             {formik.errors.username && (
               <Form.Control.Feedback type="invalid" tooltip>
                 {t(formik.errors.username)}
+              </Form.Control.Feedback>
+            )}
+            {!!(error) && (
+              <Form.Control.Feedback type="invalid" tooltip>
+                {t(error)}
               </Form.Control.Feedback>
             )}
           </FloatingLabel>
@@ -76,17 +78,19 @@ function Login() {
               value={formik.values.password}
               placeholder={t('Password')}
               name="password"
-              autoComplete="password"
+              autoComplete="current-password"
               isInvalid={!!(error) || (formik.touched.password && formik.errors.password)}
             />
+            {formik.errors.password && (
+              <Form.Control.Feedback type="invalid" tooltip>
+                {t(formik.errors.password)}
+              </Form.Control.Feedback>
+            )}
             {!!(error) && (
               <Form.Control.Feedback type="invalid" tooltip>
                 {t(error)}
               </Form.Control.Feedback>
             )}
-            <Form.Control.Feedback type="invalid" tooltip>
-              {t(formik.errors.password)}
-            </Form.Control.Feedback>
           </FloatingLabel>
         </Stack>
         <Button type="submit" variant="outline-primary" className="w-100 mb-3 btn btn-outline-primary">{t('Login')}</Button>

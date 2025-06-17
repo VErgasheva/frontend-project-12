@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { StrictMode } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { createRoot } from 'react-dom/client'
 import { io } from 'socket.io-client'
 import rootReducer from './slices/index.js'
@@ -10,10 +11,16 @@ import { configureStore } from '@reduxjs/toolkit'
 import { messagesApi } from './slices/messagesSlice.js'
 import { channelsApi, actions as channelsActions } from './slices/channelsSlice.js'
 import log from './logger.js'
+import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react'
 
 let socket = null
 
 const container = document.getElementById('chat')
+
+const rollbarConfig = {
+  accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
+  environment: 'production',
+}
 
 const setupSocket = (store) => {
   const token = localStorage.getItem('token')
@@ -34,7 +41,6 @@ const setupSocket = (store) => {
   socket = io({
     auth: { token: `Bearer ${token}` },
   })
-
   socket
     .on('connect', () => {
       log('Socket connected', { id: socket.id })
@@ -82,11 +88,17 @@ const renderApp = async () => {
   const i18n = await createI18n()
   const root = createRoot(container)
   root.render(
-    <I18nextProvider i18n={i18n}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </I18nextProvider>
+    <StrictMode>
+      <I18nextProvider i18n={i18n}>
+        <RollbarProvider config={rollbarConfig}>
+          <ErrorBoundary>
+            <Provider store={store}>
+              <App />
+            </Provider>
+          </ErrorBoundary>
+        </RollbarProvider>
+      </I18nextProvider>
+    </StrictMode>
   )
 }
 

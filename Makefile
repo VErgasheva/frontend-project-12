@@ -1,40 +1,26 @@
 install:
+	npm ci
 	cd frontend && npm ci
 
 lint-frontend:
-	cd frontend && npm run lint
+	make -C frontend lint
 
 start-frontend:
-	cd frontend && npm run start
+	make -C frontend start
 
 start-backend:
-	npx serve -s frontend/dist -l 10000
+	npx start-server -s ./frontend/dist
 
 deploy:
 	git push heroku main
 
 start:
-	npx serve -s frontend/dist -l 10000
+	make start-backend
 
-dev:
-	cd frontend && npm run dev
-
-compile:
-	rm -rf frontend/dist
-	cd frontend && npm run build
+develop:
+	make start-backend & make start-frontend
 
 build:
-	cd frontend && npm run build
-
-setup:
-	make install
-	make build
-
-run-server:
-	npx serve -s frontend/dist -l 10000
-
-run-ui:
-	cd frontend && npm run dev
-
-test:
-	cd frontend && npm run test:e2e
+	rm -rf frontend/dist
+	cd frontend && npm ci
+	npm run build
