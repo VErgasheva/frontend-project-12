@@ -1,8 +1,8 @@
 import { useFormik } from 'formik'
-import { Button, FloatingLabel, Form, Stack } from 'react-bootstrap'
+import { Button, FloatingLabel, Form, Stack, Alert } from 'react-bootstrap'
 import FormContainer from './FormContainer'
 import * as Yup from 'yup'
-import { registerUser } from '../slices/authUserSlice'
+import { registerUser, actions as userActions } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -38,6 +38,13 @@ const SignupPage = () => {
     dispatch(registerUser({ username, password }))
   }
 
+  const handleFieldChange = (e) => {
+    if (authError) {
+      dispatch(userActions.clearError())
+    }
+    formik.handleChange(e)
+  }
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -52,12 +59,18 @@ const SignupPage = () => {
     <FormContainer image="imagereg.png" imageAlt={t('Registration')} regfooter={false}>
       <Form className="w-100 mx-auto" onSubmit={formik.handleSubmit}>
         <h1 className="text-center mb-4">{t('Registration')}</h1>
+        {/* Глобальная ошибка регистрации */}
+        {!!authError && (
+          <Alert variant="danger" className="mb-3" data-testid="auth-error">
+            {t(authError)}
+          </Alert>
+        )}
         <fieldset disabled={formik.isSubmitting}>
           <Stack gap={3}>
             <FloatingLabel controlId="floatingUsername" label={t('Username')} className="position-relative">
               <Form.Control
                 autoFocus
-                onChange={formik.handleChange}
+                onChange={handleFieldChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.username}
                 placeholder={t('Username')}
@@ -65,12 +78,7 @@ const SignupPage = () => {
                 autoComplete="username"
                 isInvalid={!!authError || (formik.touched.username && formik.errors.username)}
               />
-              {authError && (
-                <Form.Control.Feedback type="invalid" tooltip>
-                  {t(authError)}
-                </Form.Control.Feedback>
-              )}
-              {formik.errors.username && (
+              {formik.touched.username && formik.errors.username && (
                 <Form.Control.Feedback type="invalid" tooltip>
                   {t(formik.errors.username)}
                 </Form.Control.Feedback>
@@ -79,22 +87,24 @@ const SignupPage = () => {
             <FloatingLabel controlId="floatingPassword" label={t('Password')}>
               <Form.Control
                 type="password"
-                onChange={formik.handleChange}
+                onChange={handleFieldChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
                 placeholder={t('Password')}
                 name="password"
                 autoComplete="new-password"
-                isInvalid={!!authError || (formik.touched.password && formik.errors.password)}
+                isInvalid={formik.touched.password && formik.errors.password}
               />
-              <Form.Control.Feedback type="invalid" tooltip>
-                {t(formik.errors.password)}
-              </Form.Control.Feedback>
+              {formik.touched.password && formik.errors.password && (
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {t(formik.errors.password)}
+                </Form.Control.Feedback>
+              )}
             </FloatingLabel>
             <FloatingLabel controlId="floatingPasswordConfirmation" label={t('Confirm the password')}>
               <Form.Control
                 type="password"
-                onChange={formik.handleChange}
+                onChange={handleFieldChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.passwordConfirmation}
                 placeholder={t('Confirm the password')}
@@ -102,9 +112,11 @@ const SignupPage = () => {
                 autoComplete="new-password"
                 isInvalid={formik.touched.passwordConfirmation && formik.errors.passwordConfirmation}
               />
-              <Form.Control.Feedback type="invalid" tooltip>
-                {t(formik.errors.passwordConfirmation)}
-              </Form.Control.Feedback>
+              {formik.touched.passwordConfirmation && formik.errors.passwordConfirmation && (
+                <Form.Control.Feedback type="invalid" tooltip>
+                  {t(formik.errors.passwordConfirmation)}
+                </Form.Control.Feedback>
+              )}
             </FloatingLabel>
             <Button type="submit" variant="outline-primary">{t('Register')}</Button>
           </Stack>
