@@ -28,6 +28,7 @@ function ChannelsList({ channels, showModal }) {
                   className="w-100 rounded-0 text-start btn"
                   variant={isSelected ? 'secondary' : undefined}
                   onClick={() => { dispatch(actions.selectChannel(channel.id)) }}
+                  name={channel.name}
                 >
                   <span className="me-1">#</span>
                   {channel.name}
