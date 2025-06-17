@@ -54,7 +54,6 @@ const SignupPage = () => {
     validationSchema,
     onSubmit: handleSubmit,
   })
-
   return (
     <FormContainer image="imagereg.png" imageAlt={t('Registration')} regfooter={false}>
       <Form className="w-100 mx-auto" onSubmit={formik.handleSubmit}>
