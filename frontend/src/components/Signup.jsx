@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
+import { useGetChannelsQuery, useAddChannelMutation, actions as channelsActions } from '../slices/channelsSlice.js'
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().trim()
@@ -28,11 +29,23 @@ const SignupPage = () => {
   const authError = useSelector(state => state.user.error)
   const isAuthenticated = useSelector(state => state.user.isAuthenticated)
 
+  const { data: channels = [], isSuccess } = useGetChannelsQuery()
+  const [addChannel] = useAddChannelMutation()
+
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/')
+      const generalChannel = channels.find(ch => ch.name === 'general')
+      if (!generalChannel && isSuccess) {
+        addChannel('general').unwrap().then((created) => {
+          dispatch(channelsActions.selectChannel(String(created.id)))
+          navigate('/')
+        })
+      } else if (generalChannel) {
+        dispatch(channelsActions.selectChannel(String(generalChannel.id)))
+        navigate('/')
+      }
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, channels, isSuccess, addChannel, dispatch, navigate])
 
   const handleSubmit = ({ username, password }) => {
     dispatch(registerUser({ username, password }))

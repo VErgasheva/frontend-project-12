@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
+import { useGetChannelsQuery, useAddChannelMutation, actions as channelsActions } from '../slices/channelsSlice.js'
 
 function Login() {
   const navigate = useNavigate()
@@ -15,11 +16,23 @@ function Login() {
   const error = useSelector(state => state.user.error)
   const isLoggedIn = useSelector(state => state.user.isAuthenticated)
 
+  const { data: channels = [], isSuccess } = useGetChannelsQuery()
+  const [addChannel] = useAddChannelMutation()
+
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/')
+      const generalChannel = channels.find(ch => ch.name === 'general')
+      if (!generalChannel && isSuccess) {
+        addChannel('general').unwrap().then((created) => {
+          dispatch(channelsActions.selectChannel(String(created.id)))
+          navigate('/')
+        })
+      } else if (generalChannel) {
+        dispatch(channelsActions.selectChannel(String(generalChannel.id)))
+        navigate('/')
+      }
     }
-  }, [isLoggedIn, navigate])
+  }, [isLoggedIn, channels, isSuccess, addChannel, dispatch, navigate])
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
