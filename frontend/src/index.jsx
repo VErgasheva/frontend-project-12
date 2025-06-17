@@ -32,10 +32,10 @@ const setupSocket = (store) => {
     return
   }
   if (
-    socket &&
-    socket.auth &&
-    socket.auth.token === token &&
-    socket.connected
+    socket
+    && socket.auth
+    && socket.auth.token === token
+    && socket.connected
   ) {
     return
   }
@@ -71,6 +71,7 @@ const setupSocket = (store) => {
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
     })
 }
+
 const renderApp = async () => {
   const store = configureStore(rootReducer)
   setupSocket(store)
