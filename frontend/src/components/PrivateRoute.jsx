@@ -7,8 +7,7 @@ function PrivateRoute() {
   if (isAuthenticated) {
     return <Outlet />
   }
-  else
-  {
+  else {
     return <Navigate to="/login" />
   }
 }

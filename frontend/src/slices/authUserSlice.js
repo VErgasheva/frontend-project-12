@@ -54,8 +54,7 @@ const userSlice = createSlice({
         if (action.error.code === 'ERR_BAD_REQUEST') {
           state.error = 'Invalid username or password'
         }
-        else
-        {
+        else {
           state.error = 'Connection error'
         }
       })
@@ -63,8 +62,7 @@ const userSlice = createSlice({
         if (action.error.code === 'ERR_BAD_REQUEST') {
           state.error = 'This user already exists'
         }
-        else
-        {
+        else {
           state.error = 'Connection error'
         }
       })

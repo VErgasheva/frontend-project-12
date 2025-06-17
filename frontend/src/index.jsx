@@ -22,7 +22,7 @@ const rollbarConfig = {
   environment: 'production',
 }
 
-const setupSocket = (store) => {
+const setupSocket= (store) => {
   const token = localStorage.getItem('token')
   if (!token) {
     if (socket) {
@@ -39,7 +39,7 @@ const setupSocket = (store) => {
     socket = null
   }
   socket = io({
-    auth: { token: `Bearer ${token}` },
+  auth: { token: `Bearer ${token}` }
   })
   socket
     .on('connect', () => {
@@ -69,22 +69,18 @@ const setupSocket = (store) => {
 
 const renderApp = async () => {
   const store = configureStore(rootReducer)
-  let prevAuth = Boolean(localStorage.getItem('token'))
   setupSocket(store)
   store.subscribe(() => {
     const isAuthenticated = store.getState().user.isAuthenticated
     const token = localStorage.getItem('token')
     if (isAuthenticated && token) {
       setupSocket(store)
-    }
-    else
-    {
+    } else {
       if (socket) {
         socket.disconnect()
         socket = null
       }
     }
-    prevAuth = isAuthenticated
   })
 
   const i18n = await createI18n()
