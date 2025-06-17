@@ -13,16 +13,16 @@ import { channelsApi, actions as channelsActions } from './slices/channelsSlice.
 import log from './logger.js'
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react'
 
-let socket = null
-
-const container = document.getElementById('chat')
-
 const rollbarConfig = {
   accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
   environment: 'production',
 }
 
-const setupSocket= (store) => {
+let socket = null
+
+const container = document.getElementById('chat')
+
+const setupSocket = (store) => {
   const token = localStorage.getItem('token')
   if (!token) {
     if (socket) {
@@ -31,7 +31,12 @@ const setupSocket= (store) => {
     }
     return
   }
-  if (socket && socket.auth && socket.auth.token === token && socket.connected) {
+  if (
+    socket &&
+    socket.auth &&
+    socket.auth.token === token &&
+    socket.connected
+  ) {
     return
   }
   if (socket) {
@@ -39,7 +44,7 @@ const setupSocket= (store) => {
     socket = null
   }
   socket = io({
-  auth: { token: `Bearer ${token}` }
+    auth: { token: `Bearer ${token}` },
   })
   socket
     .on('connect', () => {
@@ -66,7 +71,6 @@ const setupSocket= (store) => {
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
     })
 }
-
 const renderApp = async () => {
   const store = configureStore(rootReducer)
   setupSocket(store)
