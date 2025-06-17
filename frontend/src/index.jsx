@@ -14,7 +14,7 @@ import log from './logger.js'
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react'
 
 const rollbarConfig = {
-  accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
+  accessToken: import.meta.env.VITE_ROLLBAR_TOKEN,
   environment: 'production',
 }
 
@@ -79,7 +79,8 @@ const renderApp = async () => {
     const token = localStorage.getItem('token')
     if (isAuthenticated && token) {
       setupSocket(store)
-    } else {
+    }
+    else {
       if (socket) {
         socket.disconnect()
         socket = null
@@ -100,7 +101,7 @@ const renderApp = async () => {
           </ErrorBoundary>
         </RollbarProvider>
       </I18nextProvider>
-    </StrictMode>,
+    </StrictMode>
   )
 }
 
