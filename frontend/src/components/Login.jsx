@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import FormContainer from './FormContainer'
 import { Stack, FloatingLabel, Form, Button, Alert } from 'react-bootstrap'
-import { loginUser } from '../slices/authUserSlice'
+import { loginUser, actions as userActions } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,7 @@ function Login() {
     if (isLoggedIn) {
       navigate('/')
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, navigate])
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -43,6 +43,13 @@ function Login() {
     onSubmit: handleSubmit,
   })
 
+  const handleFieldChange = (e) => {
+    if (error) {
+      dispatch(userActions.logout())
+    }
+    formik.handleChange(e)
+  }
+
   return (
     <FormContainer image="imagelogin.png" imageAlt={t('Login')} regfooter={true}>
       <Form onSubmit={formik.handleSubmit}>
@@ -57,7 +64,7 @@ function Login() {
           <FloatingLabel controlId="floatingUsername" label={t('Your nickname')} className="position-relative">
             <Form.Control
               autoFocus
-              onChange={formik.handleChange}
+              onChange={handleFieldChange}
               onBlur={formik.handleBlur}
               value={formik.values.username}
               placeholder={t('Your nickname')}
@@ -74,8 +81,7 @@ function Login() {
           <FloatingLabel controlId="floatingPassword" label={t('Password')} className="mb-4">
             <Form.Control
               type="password"
-              on
-Change={formik.handleChange}
+              onChange={handleFieldChange}
               onBlur={formik.handleBlur}
               value={formik.values.password}
               placeholder={t('Password')}

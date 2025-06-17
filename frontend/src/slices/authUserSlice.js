@@ -32,6 +32,9 @@ const userSlice = createSlice({
       localStorage.removeItem('username')
       state.isAuthenticated = false
     },
+    clearError: (state) => {
+      state.error = ''
+    }
   },
   extraReducers: (builder) => {
     builder
