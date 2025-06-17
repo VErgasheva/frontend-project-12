@@ -71,7 +71,6 @@ const setupSocket = (store) => {
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
     })
 }
-
 const renderApp = async () => {
   const store = configureStore(rootReducer)
   setupSocket(store)
@@ -101,7 +100,7 @@ const renderApp = async () => {
           </ErrorBoundary>
         </RollbarProvider>
       </I18nextProvider>
-    </StrictMode>
+    </StrictMode>,
   )
 }
 
