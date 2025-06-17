@@ -15,12 +15,10 @@ deploy:
 	git push heroku main
 
 start:
-	make start-backend
+	npx serve -s frontend/dist
 
 develop:
 	make start-backend & make start-frontend
 
 build:
-	rm -rf frontend/dist
-	cd frontend && npm ci
-	npm run build
+	cd frontend && npm ci && npm run build
