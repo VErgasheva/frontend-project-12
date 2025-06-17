@@ -33,20 +33,19 @@ const SignupPage = () => {
   const [addChannel] = useAddChannelMutation()
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && isSuccess) {
       const generalChannel = channels.find(ch => ch.name === 'general')
-      if (!generalChannel && isSuccess) {
-        addChannel('general').unwrap().then((created) => {
+      if (!generalChannel) {
+        addChannel({ name: 'general' }).unwrap().then((created) => {
           dispatch(channelsActions.selectChannel(String(created.id)))
           navigate('/')
         })
-      } else if (generalChannel) {
+      } else {
         dispatch(channelsActions.selectChannel(String(generalChannel.id)))
         navigate('/')
       }
     }
-  }, [isAuthenticated, channels, isSuccess, addChannel, dispatch, navigate])
-
+  }, [isAuthenticated, isSuccess, channels, addChannel, dispatch, navigate])
   const handleSubmit = ({ username, password }) => {
     dispatch(registerUser({ username, password }))
   }
@@ -133,8 +132,8 @@ const SignupPage = () => {
             </FloatingLabel>
             <Button type="submit" variant="outline-primary">{t('Register')}</Button>
           </Stack>
-        </fieldset>
-      </Form>
+        </fieldset
+>       </Form>
     </FormContainer>
   )
 }

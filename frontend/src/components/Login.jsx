@@ -20,20 +20,19 @@ function Login() {
   const [addChannel] = useAddChannelMutation()
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && isSuccess) {
       const generalChannel = channels.find(ch => ch.name === 'general')
-      if (!generalChannel && isSuccess) {
-        addChannel('general').unwrap().then((created) => {
+      if (!generalChannel) {
+        addChannel({ name: 'general' }).unwrap().then((created) => {
           dispatch(channelsActions.selectChannel(String(created.id)))
           navigate('/')
         })
-      } else if (generalChannel) {
+      } else {
         dispatch(channelsActions.selectChannel(String(generalChannel.id)))
         navigate('/')
       }
     }
-  }, [isLoggedIn, channels, isSuccess, addChannel, dispatch, navigate])
-
+  }, [isLoggedIn, isSuccess, channels, addChannel, dispatch, navigate])
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
       .min(3, 'From 3 to 20 characters')
@@ -58,7 +57,7 @@ function Login() {
 
   const handleFieldChange = (e) => {
     if (error) {
-      dispatch(userActions.logout())
+      dispatch(userActions.clearError())
     }
     formik.handleChange(e)
   }
@@ -114,5 +113,4 @@ function Login() {
     </FormContainer>
   )
 }
-
 export default Login
