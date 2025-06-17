@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import apiRoutes from '../routes.js'
 
 const setTokenHeader = (headers) => {
-  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`)
   return headers
 }
 

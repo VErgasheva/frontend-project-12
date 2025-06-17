@@ -4,7 +4,7 @@ import { actions } from '../slices/channelsSlice.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
-function ChannelsList({ currentChannel, channels, showModal }) {
+function ChannelsList({ channels, showModal }) {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const selectedChannelId = useSelector(state => state.channels.selectedChannelId)
@@ -19,7 +19,7 @@ function ChannelsList({ currentChannel, channels, showModal }) {
         </button>
       </div>
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-        {channels.map(channel => {
+        {channels.map((channel) => {
           const isSelected = String(channel.id) === String(selectedChannelId)
           return (
             <li className="nav-item w-100" key={channel.id}>

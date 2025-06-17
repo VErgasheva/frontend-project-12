@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { createRoot } from 'react-dom/client'
 import { io } from 'socket.io-client'
@@ -76,7 +76,9 @@ const renderApp = async () => {
     const token = localStorage.getItem('token')
     if (isAuthenticated && token) {
       setupSocket(store)
-    } else {
+    }
+    else
+    {
       if (socket) {
         socket.disconnect()
         socket = null

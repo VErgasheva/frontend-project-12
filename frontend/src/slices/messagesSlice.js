@@ -2,7 +2,7 @@ import apiRoutes from '../routes.js'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const setTokenHeader = (headers) => {
-  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`)
   return headers
 }
 

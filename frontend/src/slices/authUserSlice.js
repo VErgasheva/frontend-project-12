@@ -34,7 +34,7 @@ const userSlice = createSlice({
     },
     clearError: (state) => {
       state.error = ''
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -53,14 +53,18 @@ const userSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         if (action.error.code === 'ERR_BAD_REQUEST') {
           state.error = 'Invalid username or password'
-        } else {
+        }
+        else
+        {
           state.error = 'Connection error'
         }
       })
       .addCase(registerUser.rejected, (state, action) => {
         if (action.error.code === 'ERR_BAD_REQUEST') {
           state.error = 'This user already exists'
-        } else {
+        }
+        else
+        {
           state.error = 'Connection error'
         }
       })
