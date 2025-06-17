@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import FormContainer from './FormContainer'
-import { Stack, FloatingLabel, Form, Button } from 'react-bootstrap'
+import { Stack, FloatingLabel, Form, Button, Alert } from 'react-bootstrap'
 import { loginUser } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +19,7 @@ function Login() {
     if (isLoggedIn) {
       navigate('/')
     }
-  }, [isLoggedIn, navigate])
+  }, [isLoggedIn])
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -47,6 +47,12 @@ function Login() {
     <FormContainer image="imagelogin.png" imageAlt={t('Login')} regfooter={true}>
       <Form onSubmit={formik.handleSubmit}>
         <h1 className="text-center mb-4">{t('Login')}</h1>
+        {/* Глобальная ошибка авторизации */}
+        {!!error && (
+          <Alert variant="danger" className="mb-3" data-testid="auth-error">
+            {t(error)}
+          </Alert>
+        )}
         <Stack gap={3}>
           <FloatingLabel controlId="floatingUsername" label={t('Your nickname')} className="position-relative">
             <Form.Control
@@ -57,38 +63,29 @@ function Login() {
               placeholder={t('Your nickname')}
               name="username"
               autoComplete="username"
-              isInvalid={!!(error) || (formik.touched.username && formik.errors.username)}
+              isInvalid={formik.touched.username && !!formik.errors.username}
             />
             {formik.errors.username && (
               <Form.Control.Feedback type="invalid" tooltip>
                 {t(formik.errors.username)}
               </Form.Control.Feedback>
             )}
-            {!!(error) && (
-              <Form.Control.Feedback type="invalid" tooltip>
-                {t(error)}
-              </Form.Control.Feedback>
-            )}
           </FloatingLabel>
           <FloatingLabel controlId="floatingPassword" label={t('Password')} className="mb-4">
             <Form.Control
               type="password"
-              onChange={formik.handleChange}
+              on
+Change={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.password}
               placeholder={t('Password')}
               name="password"
-              autoComplete="current-password"
-              isInvalid={!!(error) || (formik.touched.password && formik.errors.password)}
+              autoComplete="password"
+              isInvalid={formik.touched.password && !!formik.errors.password}
             />
             {formik.errors.password && (
               <Form.Control.Feedback type="invalid" tooltip>
                 {t(formik.errors.password)}
-              </Form.Control.Feedback>
-            )}
-            {!!(error) && (
-              <Form.Control.Feedback type="invalid" tooltip>
-                {t(error)}
               </Form.Control.Feedback>
             )}
           </FloatingLabel>
