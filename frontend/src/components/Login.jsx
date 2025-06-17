@@ -33,6 +33,7 @@ function Login() {
       }
     }
   }, [isLoggedIn, isSuccess, channels, addChannel, dispatch, navigate])
+
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
       .min(3, 'From 3 to 20 characters')
@@ -41,7 +42,6 @@ function Login() {
     password: Yup.string().trim()
       .required('Required field'),
   })
-
   const handleSubmit = ({ username, password }) => {
     dispatch(loginUser({ username, password }))
   }

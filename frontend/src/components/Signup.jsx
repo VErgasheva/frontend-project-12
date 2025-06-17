@@ -132,8 +132,7 @@ const SignupPage = () => {
             </FloatingLabel>
             <Button type="submit" variant="outline-primary">{t('Register')}</Button>
           </Stack>
-        </fieldset
->       </Form>
+        </fieldset>       </Form>
     </FormContainer>
   )
 }
