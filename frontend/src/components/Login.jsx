@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
-import { useGetChannelsQuery, useAddChannelMutation, actions as channelsActions } from '../slices/channelsSlice.js'
 
 function Login() {
   const navigate = useNavigate()
@@ -16,23 +15,11 @@ function Login() {
   const error = useSelector(state => state.user.error)
   const isLoggedIn = useSelector(state => state.user.isAuthenticated)
 
-  const { data: channels = [], isSuccess } = useGetChannelsQuery()
-  const [addChannel] = useAddChannelMutation()
-
   useEffect(() => {
-    if (isLoggedIn && isSuccess) {
-      const generalChannel = channels.find(ch => ch.name === 'general')
-      if (!generalChannel) {
-        addChannel({ name: 'general' }).unwrap().then((created) => {
-          dispatch(channelsActions.selectChannel(String(created.id)))
-          navigate('/')
-        })
-      } else {
-        dispatch(channelsActions.selectChannel(String(generalChannel.id)))
-        navigate('/')
-      }
+    if (isLoggedIn) {
+      navigate('/')
     }
-  }, [isLoggedIn, isSuccess, channels, addChannel, dispatch, navigate])
+  }, [isLoggedIn, navigate])
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -42,6 +29,7 @@ function Login() {
     password: Yup.string().trim()
       .required('Required field'),
   })
+
   const handleSubmit = ({ username, password }) => {
     dispatch(loginUser({ username, password }))
   }
@@ -57,7 +45,7 @@ function Login() {
 
   const handleFieldChange = (e) => {
     if (error) {
-      dispatch(userActions.clearError())
+      dispatch(userActions.logout())
     }
     formik.handleChange(e)
   }
@@ -113,4 +101,5 @@ function Login() {
     </FormContainer>
   )
 }
+
 export default Login
