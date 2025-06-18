@@ -34,7 +34,7 @@ const SignupPage = () => {
     }
   }, [isAuthenticated, navigate])
 
-  const handleSubmit = ({ username, password}) => {
+  const handleSubmit = ({ username, password }) => {
     dispatch(registerUser({ username, password }))
   }
 
