@@ -12,7 +12,6 @@ function Login() {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const error = useSelector(state => state.user.error)
-  const isLoggedIn = useSelector(state => state.user.isAuthenticated)
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()

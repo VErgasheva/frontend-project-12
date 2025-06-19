@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-const axiosInstance = axios.create({
-  baseURL: '/api/v1',
+const instance = axios.create({
+  timeout: 10000,
 })
 
-axiosInstance.interceptors.request.use((config) => {
+instance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -12,4 +12,5 @@ axiosInstance.interceptors.request.use((config) => {
   return config
 })
 
-export default axiosInstance
+export default instance
+
