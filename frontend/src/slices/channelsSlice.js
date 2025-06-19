@@ -43,14 +43,14 @@ export const channelsApi = createApi({
 
 export const channelsSlice = createSlice({
   name: 'channels',
-  initialState: { selectedChannelId: '1' },
+  initialState: { selectedChannelId: null },
   reducers: {
     selectChannel: (state, action) => { state.selectedChannelId = String(action.payload) },
   },
   extraReducers: (builder) => {
     builder.addMatcher(channelsApi.endpoints.deleteChannel.matchFulfilled, (state, { payload }) => {
         if (String(payload.id) === String(state.selectedChannelId)) {
-          state.selectedChannelId = '1'
+          state.selectedChannelId = null
         }
       })
       .addMatcher(channelsApi.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
