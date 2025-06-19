@@ -1,25 +1,18 @@
-import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import FormContainer from './FormContainer'
 import { Stack, FloatingLabel, Form, Button, Alert } from 'react-bootstrap'
 import { loginUser, actions as userActions } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
+import useAuthRedirect from '../hooks/useAuthRedirect'
 
 function Login() {
-  const navigate = useNavigate()
+  useAuthRedirect()
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const error = useSelector(state => state.user.error)
   const isLoggedIn = useSelector(state => state.user.isAuthenticated)
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/')
-    }
-  }, [isLoggedIn, navigate])
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -83,7 +76,7 @@ function Login() {
               type="password"
               onChange={handleFieldChange}
               onBlur={formik.handleBlur}
-              value={formik.values.password}
+ value={formik.values.password}
               placeholder={t('Password')}
               name="password"
               autoComplete="password"

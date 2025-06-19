@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-const useAuthCheck = () => {
+const useAuthRedirect = () => {
   const isAuthenticated = useSelector(state => state.user.isAuthenticated)
   const navigate = useNavigate()
 
@@ -13,4 +13,4 @@ const useAuthCheck = () => {
   }, [isAuthenticated, navigate])
 }
 
-export default useAuthCheck
+export default useAuthRedirect
