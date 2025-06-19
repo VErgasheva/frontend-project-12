@@ -3,9 +3,13 @@ import { createSlice } from '@reduxjs/toolkit'
 import apiRoutes from '../routes.js'
 
 const setTokenHeader = (headers) => {
-  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+  const token = localStorage.getItem('token');
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
   return headers;
 };
+
 
 export const channelsApi = createApi({
   reducerPath: 'channelsApi',
@@ -48,7 +52,13 @@ export const channelsSlice = createSlice({
     selectChannel: (state, action) => { state.selectedChannelId = String(action.payload) },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(channelsApi.endpoints.deleteChannel.matchFulfilled, (state, { payload }) => {
+    builder
+      .addMatcher(channelsApi.endpoints.getChannels.matchFulfilled, (state, { payload }) => {
+        if (!state.selectedChannelId && payload.length > 0) {
+          state.selectedChannelId = String(payload[0].id)
+        }
+      })
+      .addMatcher(channelsApi.endpoints.deleteChannel.matchFulfilled, (state, { payload }, action) => {
         if (String(payload.id) === String(state.selectedChannelId)) {
           state.selectedChannelId = null
         }
