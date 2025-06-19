@@ -4,9 +4,8 @@ import FormContainer from './FormContainer'
 import * as Yup from 'yup'
 import { registerUser } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
+import useAuthCheck from '../hooks/useAuthCheck'
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().trim()
@@ -23,16 +22,9 @@ const validationSchema = Yup.object().shape({
 
 const SignupPage = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const authError = useSelector(state => state.user.error)
-  const isAuthenticated = useSelector(state => state.user.isAuthenticated)
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/')
-    }
-  }, [isAuthenticated, navigate])
+  useAuthCheck() // Вынесенная проверка авторизации
 
   const handleSubmit = ({ username, password }) => {
     dispatch(registerUser({ username, password }))
