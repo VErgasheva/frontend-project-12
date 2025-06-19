@@ -1,11 +1,13 @@
 import { useFormik } from 'formik'
-import { Button, FloatingLabel, Form, Stack } from 'react-bootstrap'
+import { Button, FloatingLabel, Form, Stack, Alert } from 'react-bootstrap'
 import FormContainer from './FormContainer'
 import * as Yup from 'yup'
 import { registerUser } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import useAuthCheck from '../hooks/useAuthCheck'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().trim()
@@ -24,7 +26,16 @@ const SignupPage = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const authError = useSelector(state => state.user.error)
-  useAuthCheck() // Вынесенная проверка авторизации
+  const isAuthenticated = useSelector(state => state.user.isAuthenticated)
+  const navigate = useNavigate()
+
+  useAuthCheck()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = ({ username, password }) => {
     dispatch(registerUser({ username, password }))
@@ -44,6 +55,11 @@ const SignupPage = () => {
     <FormContainer image="imagereg.png" imageAlt={t('Registration')} regfooter={false}>
       <Form className="w-100 mx-auto" onSubmit={formik.handleSubmit}>
         <h1 className="text-center mb-4">{t('Registration')}</h1>
+{!!authError && (
+          <Alert variant="danger" className="mb-3" data-testid="auth-error">
+            {t(authError)}
+          </Alert>
+        )}
         <fieldset disabled={formik.isSubmitting}>
           <Stack gap={3}>
             <FloatingLabel controlId="floatingUsername" label={t('Username')} className="position-relative">
