@@ -1,17 +1,25 @@
+import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import FormContainer from './FormContainer'
 import { Stack, FloatingLabel, Form, Button, Alert } from 'react-bootstrap'
 import { loginUser, actions as userActions } from '../slices/authUserSlice'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
-import useAuthCheck from '../hooks/useAuthCheck'
 
 function Login() {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const error = useSelector(state => state.user.error)
-  useAuthCheck()
+  const isLoggedIn = useSelector(state => state.user.isAuthenticated)
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/')
+    }
+  }, [isLoggedIn, navigate])
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -46,6 +54,7 @@ function Login() {
     <FormContainer image="imagelogin.png" imageAlt={t('Login')} regfooter={true}>
       <Form onSubmit={formik.handleSubmit}>
         <h1 className="text-center mb-4">{t('Login')}</h1>
+        {/* Глобальная ошибка авторизации */}
         {!!error && (
           <Alert variant="danger" className="mb-3" data-testid="auth-error">
             {t(error)}

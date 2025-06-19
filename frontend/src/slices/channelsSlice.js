@@ -3,13 +3,9 @@ import { createSlice } from '@reduxjs/toolkit'
 import apiRoutes from '../routes.js'
 
 const setTokenHeader = (headers) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    headers.set('Authorization', `Bearer ${token}`);
-  }
-  return headers;
-};
-
+  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`)
+  return headers
+}
 
 export const channelsApi = createApi({
   reducerPath: 'channelsApi',
@@ -29,14 +25,14 @@ export const channelsApi = createApi({
     }),
     deleteChannel: builder.mutation({
       query: id => ({
-        url: `/channels/${id}`,
+        url: `/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Channels'],
     }),
     renameChannel: builder.mutation({
       query: ({ id, name }) => ({
-        url: `/channels/${id}`,
+        url: `/${id}`,
         method: 'PATCH',
         body: { name },
       }),
@@ -47,24 +43,19 @@ export const channelsApi = createApi({
 
 export const channelsSlice = createSlice({
   name: 'channels',
-  initialState: { selectedChannelId: null },
+  initialState: { selectedChannelId: '1' },
   reducers: {
-    selectChannel: (state, action) => { state.selectedChannelId = String(action.payload) },
+    selectChannel: (state, action) => { state.selectedChannelId = action.payload },
   },
   extraReducers: (builder) => {
     builder
-      .addMatcher(channelsApi.endpoints.getChannels.matchFulfilled, (state, { payload }) => {
-        if (!state.selectedChannelId && payload.length > 0) {
-          state.selectedChannelId = String(payload[0].id)
-        }
-      })
-      .addMatcher(channelsApi.endpoints.deleteChannel.matchFulfilled, (state, { payload }, action) => {
-        if (String(payload.id) === String(state.selectedChannelId)) {
-          state.selectedChannelId = null
+      .addMatcher(channelsApi.endpoints.deleteChannel.matchFulfilled, (state, { payload }) => {
+        if (payload.id === state.selectedChannelId) {
+          state.selectedChannelId = '1'
         }
       })
       .addMatcher(channelsApi.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
-        state.selectedChannelId = String(payload.id)
+        state.selectedChannelId = payload.id
       })
   },
 })

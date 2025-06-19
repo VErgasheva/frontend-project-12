@@ -13,14 +13,14 @@ import { channelsApi, actions as channelsActions } from './slices/channelsSlice.
 import log from './logger.js'
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react'
 
+const rollbarConfig = {
+  accessToken: import.meta.env.VITE_ROLLBAR_TOKEN,
+  environment: 'production',
+}
+
 let socket = null
 
 const container = document.getElementById('chat')
-
-const rollbarConfig = {
-  accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
-  environment: 'production',
-}
 
 const setupSocket = (store) => {
   const token = localStorage.getItem('token')
@@ -31,7 +31,12 @@ const setupSocket = (store) => {
     }
     return
   }
-  if (socket && socket.auth && socket.auth.token === token && socket.connected) {
+  if (
+    socket
+    && socket.auth
+    && socket.auth.token === token
+    && socket.connected
+  ) {
     return
   }
   if (socket) {
@@ -59,36 +64,28 @@ const setupSocket = (store) => {
     .on('removeChannel', (payload) => {
       log('Channel removed', payload)
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
-      const state = store.getState()
-      const channelsList = state.channelsApi.queries?.['getChannels(undefined)']?.data || []
-      if (channelsList.length > 0) {
-        store.dispatch(channelsActions.selectChannel(String(channelsList[0].id)))
-      } else {
-        store.dispatch(channelsActions.selectChannel(null))
-      }
+      store.dispatch(channelsActions.selectChannel('1'))
     })
     .on('renameChannel', (payload) => {
       log('Channel renamed', payload)
       store.dispatch(channelsApi.util.invalidateTags(['Channels']))
     })
 }
-
 const renderApp = async () => {
   const store = configureStore(rootReducer)
-  let prevAuth = Boolean(localStorage.getItem('token'))
   setupSocket(store)
   store.subscribe(() => {
     const isAuthenticated = store.getState().user.isAuthenticated
     const token = localStorage.getItem('token')
     if (isAuthenticated && token) {
       setupSocket(store)
-    } else {
+    }
+    else {
       if (socket) {
         socket.disconnect()
         socket = null
       }
     }
-    prevAuth = isAuthenticated
   })
 
   const i18n = await createI18n()
@@ -104,7 +101,7 @@ const renderApp = async () => {
           </ErrorBoundary>
         </RollbarProvider>
       </I18nextProvider>
-    </StrictMode>
+    </StrictMode>,
   )
 }
 
