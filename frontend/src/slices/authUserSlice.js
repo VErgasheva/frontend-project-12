@@ -1,11 +1,11 @@
-import axiosInstance from '../api/axiosInstance.js'
+import axios from 'axios'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import apiRoutes from '../routes.js'
 
 export const loginUser = createAsyncThunk(
   'user/login',
   async ({ username, password }) => {
-    const res = await axiosInstance.post(apiRoutes.login(), { username, password })
+    const res = await axios.post(apiRoutes.login(), { username, password })
     return res.data
   },
 )
@@ -13,7 +13,7 @@ export const loginUser = createAsyncThunk(
 export const registerUser = createAsyncThunk(
   'user/register',
   async ({ username, password }) => {
-    const res = await axiosInstance.post(apiRoutes.signup(), { username, password })
+    const res = await axios.post(apiRoutes.signup(), { username, password })
     return res.data
   },
 )
