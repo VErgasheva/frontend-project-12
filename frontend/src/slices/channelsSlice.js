@@ -3,9 +3,9 @@ import { createSlice } from '@reduxjs/toolkit'
 import apiRoutes from '../routes.js'
 
 const setTokenHeader = (headers) => {
-  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`)
-  return headers
-}
+  headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+  return headers;
+};
 
 export const channelsApi = createApi({
   reducerPath: 'channelsApi',
@@ -25,14 +25,14 @@ export const channelsApi = createApi({
     }),
     deleteChannel: builder.mutation({
       query: id => ({
-        url: `/${id}`,
+        url: `/channels/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Channels'],
     }),
     renameChannel: builder.mutation({
       query: ({ id, name }) => ({
-        url: `/${id}`,
+        url: `/channels/${id}`,
         method: 'PATCH',
         body: { name },
       }),
@@ -45,17 +45,16 @@ export const channelsSlice = createSlice({
   name: 'channels',
   initialState: { selectedChannelId: '1' },
   reducers: {
-    selectChannel: (state, action) => { state.selectedChannelId = action.payload },
+    selectChannel: (state, action) => { state.selectedChannelId = String(action.payload) },
   },
   extraReducers: (builder) => {
-    builder
-      .addMatcher(channelsApi.endpoints.deleteChannel.matchFulfilled, (state, { payload }) => {
-        if (payload.id === state.selectedChannelId) {
+    builder.addMatcher(channelsApi.endpoints.deleteChannel.matchFulfilled, (state, { payload }) => {
+        if (String(payload.id) === String(state.selectedChannelId)) {
           state.selectedChannelId = '1'
         }
       })
       .addMatcher(channelsApi.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
-        state.selectedChannelId = payload.id
+        state.selectedChannelId = String(payload.id)
       })
   },
 })

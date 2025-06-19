@@ -1,19 +1,22 @@
 import axiosInstance from '../api/axiosInstance'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import apiRoutes from '../routes.js'
+import { actions as channelsActions } from './channelsSlice.js'
 
 export const loginUser = createAsyncThunk(
   'user/login',
-  async ({ username, password }) => {
+  async ({ username, password }, { dispatch }) => {
     const res = await axiosInstance.post(apiRoutes.login(), { username, password })
+    dispatch(channelsActions.selectChannel('1'))
     return res.data
   },
 )
 
 export const registerUser = createAsyncThunk(
   'user/register',
-  async ({ username, password }) => {
+  async ({ username, password }, { dispatch }) => {
     const res = await axiosInstance.post(apiRoutes.signup(), { username, password })
+    dispatch(channelsActions.selectChannel('1'))
     return res.data
   },
 )
@@ -27,13 +30,17 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    logout: (state) => {
+    logout: (state, action) => {
       localStorage.removeItem('token')
       localStorage.removeItem('username')
       state.isAuthenticated = false
+      if (action && action.payload && action.payload.dispatch) {
+        action.payload.dispatch(channelsActions.selectChannel('1'))
+      }
     },
     clearError: (state) => {
-      state.error = ''}
+      state.error = ''
+    }
   },
   extraReducers: (builder) => {
     builder
