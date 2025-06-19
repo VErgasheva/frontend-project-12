@@ -12,7 +12,6 @@ function Login() {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const error = useSelector(state => state.user.error)
-  const isLoggedIn = useSelector(state => state.user.isAuthenticated)
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -76,7 +75,7 @@ function Login() {
               type="password"
               onChange={handleFieldChange}
               onBlur={formik.handleBlur}
- value={formik.values.password}
+              value={formik.values.password}
               placeholder={t('Password')}
               name="password"
               autoComplete="password"
